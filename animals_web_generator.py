@@ -1,20 +1,20 @@
 import json
-import os
+
 
 # JSON read
-with open(
-    "E:/Python/Lernen/Zootopia_Git/animals_data.json", "r", encoding="utf-8"
-) as handle:
-    animals_data = json.load(handle)
+def load_data(file_path):
+    with open(file_path, "r", encoding="utf-8") as handle:
+        return json.load(handle)
+
 
 # HTML read
-with open("Zootopia_Git/animals_template.html", "r", encoding="utf-8") as fileobj:
-    html_temp = fileobj.read()
+def load_template(file_path):
+    with open(file_path, "r", encoding="utf-8") as fileobj:
+        return fileobj.read()
 
-# String with animals-data
-output = ""
 
-for animal in animals_data:
+# HTML cards
+def serialize_animal(animal):
     name = animal.get("name")
     characteristics = animal.get("characteristics", {})
     diet = characteristics.get("diet")
@@ -22,23 +22,49 @@ for animal in animals_data:
     locations = animal.get("locations", [])
     first_location = locations[0] if locations else None
 
-    output += "<li class='cards__item'></br>"
+    output = '    <li class="cards__item">\n'
 
+    # Title
     if name:
-        output += f"    <div class='card__title'>{name}</div>"
-    output += " <p class='card__text'>"
+        output += f'      <div class="card__title">{name}</div>\n'
+
+    # Text-block
+    output += '      <div class="card__text">\n'
+    output += "        <ul>\n"
     if diet:
-        output += f"    <strong>Diet:</strong> {diet}<br/>"
+        output += f"          <li><strong>Diet:</strong> {diet}</li>\n"
     if first_location:
-        output += f"    <strong>Location:</strong> {first_location}<br/>"
+        output += f"          <li><strong>Location:</strong> {first_location}</li>\n"
     if animal_type:
-        output += f"    <strong>Type:</strong> {animal_type}<br/>"
-    output += "  </p></li>\n"
+        output += f"          <li><strong>Type:</strong> {animal_type}</li>\n"
+    output += "        </ul>\n"
+    output += "      </div>\n"
+    output += "    </li>\n"
+
+    return output
 
 
-final_html = html_temp.replace("__REPLACE_ANIMALS_INFO__", output)
+def write_html(file_path, html_content):
+    with open(file_path, "w", encoding="utf-8") as output_file:
+        output_file.write(html_content)
 
-with open("Zootopia_Git/animals.html", "w", encoding="utf-8") as output_file:
-    output_file.write(final_html)
 
-print(output)
+def main():
+    json_path = "E:/Python/Lernen/Zootopia_Git/animals_data.json"
+    template_path = "Zootopia_Git/animals_template.html"
+    output_path = "Zootopia_Git/animals.html"
+
+    animals_data = load_data(json_path)
+    html_template = load_template(template_path)
+
+    cards_html = ""
+    for animal in animals_data:
+        cards_html += serialize_animal(animal)
+
+    final_html = html_template.replace("__REPLACE_ANIMALS_INFO__", cards_html)
+
+    write_html(output_path, final_html)
+
+
+if __name__ == "__main__":
+    main()
