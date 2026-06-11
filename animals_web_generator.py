@@ -50,9 +50,9 @@ def write_html(file_path, html_content):
 
 
 def main():
-    json_path = "E:/Python/Lernen/Zootopia_Git/animals_data.json"
-    template_path = "Zootopia_Git/animals_template.html"
-    output_path = "Zootopia_Git/animals.html"
+    json_path = "My-Zootopia/animals_data.json"
+    template_path = "My-Zootopia/animals_template.html"
+    output_path = "My-Zootopia/animals.html"
 
     animals_data = load_data(json_path)
     html_template = load_template(template_path)
