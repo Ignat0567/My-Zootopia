@@ -1,27 +1,17 @@
 import json
+import os
 
+# JSON read
+with open("E:/Python/Lernen/Zootopia_Git/animals_data.json", "r", encoding="utf-8") as handle:
+    animals_data = json.load(handle)
 
-def load_data(file_path):
-    """Loads a JSON file"""
-    with open(file_path, "r", encoding="utf-8") as handle:
-        return json.load(handle)
+# HTML read
+with open("Zootopia_Git/animals_template.html", "r", encoding="utf-8") as fileobj:
+    html_temp = fileobj.read()
 
-
-animals_data = load_data("E:/Python/Lernen/Zootopia_Git/animals_data.json")
-
-# print(animals_data)
-
-# def get_animals(animals_lst):
-#     new_animals_lst = []
-#     for animal in animals_lst:
-#         new_animals_lst.append(animal['name'])
-#     return new_animals_lst
-
-# print(get_animals(animals_data))
-
-
+# String with animals-data
+output = ''
 for animal in animals_data:
-
     name = animal.get("name")
     characteristics = animal.get("characteristics", {})
     diet = characteristics.get("diet")
@@ -30,11 +20,16 @@ for animal in animals_data:
     first_location = locations[0] if locations else None
 
     if name:
-        print(f"Name: {name}")
+        output += f"Name: {name}\n"
     if diet:
-        print(f"Diet: {diet}")
+        output += f"Diet: {diet}\n"
     if first_location:
-        print(f"Erster Ort: {first_location}")
+        output += f"Location: {first_location}\n"
     if animal_type:
-        print(f"Typ: {animal_type}")
-    print()    
+        output += f"Type: {animal_type}\n"
+    output += "\n"
+
+final_html = html_temp.replace("__REPLACE_ANIMALS_INFO__", output)
+
+with open("Zootopia_Git/animals.html", "w", encoding="utf-8") as output_file:
+    output_file.write(final_html)
